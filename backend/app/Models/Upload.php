@@ -8,7 +8,13 @@ class Upload extends Model
 {
     //
     protected $fillable = [
-        'file',
-        'jobDescription',
+    'file',
+    'jobDescription',
+    'status',
+    'analysis',
+    ];
+
+      protected $casts = [
+        'analysis' => 'array',
     ];
 }

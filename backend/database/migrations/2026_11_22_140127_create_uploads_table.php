@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use phpDocumentor\Reflection\Types\Nullable;
 
 return new class extends Migration
 {
@@ -15,9 +16,12 @@ return new class extends Migration
             $table->id();
             $table->string('file');
             $table->string('jobDescription');
+            $table->longText('analysis')->nullable();
+            $table->string('status')->default("pending");
             $table->timestamps();
         });
     }
+    
 
     /**
      * Reverse the migrations.
