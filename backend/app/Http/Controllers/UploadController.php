@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use App\Models\Upload;
 use Illuminate\Http\Request;
@@ -19,36 +19,43 @@ class UploadController extends Controller
       'jobDescription' => 'required|string',
     ]);
 
-    dd($data);
+    
 
     if ($data->fails()) {
       return response()->json([
         'message' => 'Unexpected Error Please try Again',
-        'error' => $data->errors(),
+        'error' => $data->error(),
         'verified' => false,
       ], 422);
     }
 
     $validated = $data->validated();
 
-    dd($validated);
+    
 
     foreach ($validated['file'] as $file) {
 
-      $path = $file->store('cv', 'public');
+      
+            $path = $file->store('cv', 'public');
+      
+            $dumb= Upload::create([
+              'file' => $path,
+              'jobDescription' => $validated['jobDescription'],
+            ]);
 
-      $dumb= Upload::create([
-        'file' => $path,
-        'jobDescription' => $validated['jobDescription'],
-      ]);
-      dd($dumb);
-      dd($data);
     }
-
+      
 
     return response()->json([
       'success' => true,
       'message' => 'CV uploaded successfully',
+      'analysis' => [
+            'total_cv' => count($file),
+            'files' => collect($file)->map(fn($file) => [
+                'name' => $file->getClientOriginalName(),
+                'size' => $file->getSize(),
+            ]),
+        ],
     ], 200);
   }
 }
